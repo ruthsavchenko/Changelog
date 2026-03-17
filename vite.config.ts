@@ -5,9 +5,9 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   // On GitHub Pages the app lives at /REPO_NAME/, not /
-  // GITHUB_REPOSITORY is set automatically in Actions (e.g. "ruth/feature")
-  base: process.env.GITHUB_REPOSITORY
-    ? `/${process.env.GITHUB_REPOSITORY.split('/')[1]}/`
+  // GITHUB_PAGES is set explicitly only in the Pages build job (not in E2E)
+  base: process.env.GITHUB_PAGES
+    ? `/${process.env.GITHUB_REPOSITORY!.split('/')[1]}/`
     : '/',
   test: {
     environment: 'jsdom',

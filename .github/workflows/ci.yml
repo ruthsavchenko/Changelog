@@ -58,6 +58,8 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          GITHUB_PAGES: 'true'  # sets base: /REPO_NAME/ for GitHub Pages deployment
 
       # Upload as GitHub Pages artifact (replaces plain upload-artifact for Pages)
       - name: Upload Pages artifact
