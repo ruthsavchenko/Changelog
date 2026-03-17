@@ -6,6 +6,12 @@ on:
   pull_request:
     branches: [main, master]
 
+# Required for GitHub Pages deploy
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   # ─── Job 1: Type check + Unit + Integration tests ───────────────────────────
   test:
@@ -31,7 +37,7 @@ jobs:
       - name: Run unit & integration tests
         run: npm test
 
-  # ─── Job 2: Build ────────────────────────────────────────────────────────────
+  # ─── Job 2: Build + upload Pages artifact ────────────────────────────────────
   build:
     name: Build
     runs-on: ubuntu-latest
@@ -53,13 +59,11 @@ jobs:
       - name: Build
         run: npm run build
 
-      # Keep the build output as an artifact for 7 days
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
+      # Upload as GitHub Pages artifact (replaces plain upload-artifact for Pages)
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          name: dist
           path: dist/
-          retention-days: 7
 
   # ─── Job 3: E2E tests ────────────────────────────────────────────────────────
   e2e:
@@ -94,3 +98,19 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 7
+
+  # ─── Job 4: Deploy to GitHub Pages ───────────────────────────────────────────
+  deploy:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: [build, e2e]  # only deploy if build AND e2e passed
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}  # shows the URL in Actions UI
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
