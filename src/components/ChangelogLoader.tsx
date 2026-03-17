@@ -4,7 +4,6 @@ interface ChangelogLoaderProps {
   hasNextPage: boolean
   isFetchingNextPage: boolean
   total: number
-  loadedCount: number
   onIntersect: () => void
 }
 
@@ -12,7 +11,6 @@ export function ChangelogLoader({
   hasNextPage,
   isFetchingNextPage,
   total,
-  loadedCount,
   onIntersect,
 }: ChangelogLoaderProps) {
   const sentinelRef = useRef<HTMLDivElement>(null)

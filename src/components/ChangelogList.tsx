@@ -50,9 +50,6 @@ export function ChangelogList({
     }
   }, [lastVirtualItem?.index, allItems.length, hasNextPage, isFetchingNextPage, fetchNextPage])
 
-  console.log('allItems', allItems);
-  
-
   return (
     <div
       ref={parentRef}
@@ -87,7 +84,6 @@ export function ChangelogList({
         hasNextPage={hasNextPage}
         isFetchingNextPage={isFetchingNextPage}
         total={total}
-        loadedCount={allItems.length}
         onIntersect={fetchNextPage}
       />
     </div>
